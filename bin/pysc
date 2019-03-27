@@ -13,14 +13,14 @@ def main():
     # analyse the sites found in the read
     sparser = subparsers.add_parser(
         "demultiplex",
-        help="Demultiplex a TCR library")
+        help="Demultiplex an ICELL8 library")
     sparser.add_argument(
         "-1", "--read_1", dest="read1",
         type=str,
         help="The read 1 FastQ file")
     sparser.add_argument(
         "-2", "--read_2", dest="read2",
-        type=str,
+        type=str, nargs="?",
         help="The read 2 FastQ file")
     sparser.add_argument(
         "-w", "--well-list", dest="welllist",
@@ -38,23 +38,23 @@ def main():
         column, sample, and wbc can be used as qualifiers""")
     sparser.add_argument(
         "--well-barcode-read", dest="wbc_read",
-        type=int, nargs="?", default=1, choices=[1, 2],
+        type=int, default=1, choices=[1, 2],
         help="The well-barcode read")
     sparser.add_argument(
         "--well-barcode-start", dest="wbc_start",
-        type=int, nargs="?", default=0,
+        type=int, default=0,
         help="The well-barcode start")
     sparser.add_argument(
         "--well-barcode-end", dest="wbc_end",
-        type=int, nargs="?", default=11,
+        type=int, default=10,
         help="The well-barcode end")
     sparser.add_argument(
         "--data-start", dest="data_start",
-        type=int, nargs="?", default=14,
+        type=int, default=14,
         help="The data start")
     sparser.add_argument(
         "--items-in-memory", dest="nitems",
-        type=int, nargs="?", default=1000000,
+        type=int, default=1000000,
         help="The number of items in memory")
     sparser.set_defaults(func=scripts.demultiplex)
 

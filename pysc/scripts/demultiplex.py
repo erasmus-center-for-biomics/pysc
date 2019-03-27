@@ -1,6 +1,6 @@
 import sys
 import gzip
-from pysc.demultiplex import PEDemultiplexer
+from pysc.demultiplex import SRDemultiplexer, PEDemultiplexer
 
 
 def read_well_list(stream):
@@ -21,34 +21,54 @@ def read_well_list(stream):
 
 def demultiplex(args):
     """Demultiplex the data."""
-    if args.read1.endswith(".gz"):
-        streama = gzip.open(args.read1, "rt")
-    else:
-        streama = open(args.read1, "rt")
-
     if args.read2:
+        if args.read1.endswith(".gz"):
+            streama = gzip.open(args.read1, "rt")
+        else:
+            streama = open(args.read1, "rt")
+
         if args.read2.endswith(".gz"):
             streamb = gzip.open(args.read2, "rt")
         else:
             streamb = open(args.read1, "rt")
 
-    with open(args.welllist, "rt") as stream:
-        wells = read_well_list(stream)
+        with open(args.welllist, "rt") as stream:
+            wells = read_well_list(stream)
 
-    demultiplexer = PEDemultiplexer()
-    demultiplexer.expected = wells
-    demultiplexer.wbc_read = args.wbc_read
-    demultiplexer.wbc_start = args.wbc_start
-    demultiplexer.wbc_end = args.wbc_end
-    demultiplexer.data_start = args.data_start
-    demultiplexer.reada_fname = args.output_read_1
-    demultiplexer.readb_fname = args.output_read_2
-    demultiplexer.batchsize = args.nitems
+        demultiplexer = PEDemultiplexer()
+        demultiplexer.expected = wells
+        demultiplexer.wbc_read = args.wbc_read
+        demultiplexer.wbc_start = args.wbc_start
+        demultiplexer.wbc_end = args.wbc_end
+        demultiplexer.data_start = args.data_start
+        demultiplexer.reada_fname = args.output_read_1
+        demultiplexer.readb_fname = args.output_read_2
+        demultiplexer.batchsize = args.nitems
 
-    print(demultiplexer.option_report())
-    # demultiplex the data
-    demultiplexer.process(streama, streamb)
+        print(demultiplexer.option_report())
+        # demultiplex the data
+        demultiplexer.process(streama, streamb)
 
-    # close the input streams
-    streama.close()
-    streamb.close()
+        # close the input streams
+        streama.close()
+        streamb.close()
+    else:
+        if args.read1.endswith(".gz"):
+            stream = gzip.open(args.read1, "rt")
+        else:
+            stream = open(args.read1, "rt")
+        with open(args.welllist, "rt") as stream:
+            wells = read_well_list(stream)
+
+        # run the single read demultiplexing
+        demultiplexer = SRDemultiplexer()
+        demultiplexer.expected = wells
+        demultiplexer.wbc_start = args.wbc_start
+        demultiplexer.wbc_end = args.wbc_end
+        demultiplexer.data_start = args.data_start
+        demultiplexer.read_fname = args.output_read_1
+        demultiplexer.batchsize = args.nitems
+
+        # demultiplex the data
+        print(demultiplexer.option_report())
+        demultiplexer.process(stream)

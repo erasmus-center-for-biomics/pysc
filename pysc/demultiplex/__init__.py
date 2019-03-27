@@ -3,13 +3,91 @@ from itertools import groupby
 from operator import itemgetter
 
 
+class SRDemultiplexer:
+
+    def __init__(self):
+        self.wbc_start = 0
+        self.wbc_end = 0
+        self.data_start = 0
+        self.batchsize = 1000000
+        self.read_fname = "{sample}_{wbc}_{row}_{column}_R1.fastq"
+        #
+        self.expected = {}
+        self.unexpected = {
+            "sample": "undetermined",
+            "row": "NA",
+            "column": "NA"
+        }
+
+    def option_report(self):
+        return """SRDemultiplexer
+  well-barcode-start: {wbc_start}
+  well-barcode-end: {wbc_end}
+  data-start: {data_start}
+  batchsize: {batchsize}
+  output-read: {read_fname}
+  expected {n} barcodes
+        """.format(
+            wbc_start=self.wbc_start,
+            wbc_end=self.wbc_end,
+            data_start=self.data_start,
+            batchsize=self.batchsize,
+            read_fname=self.read_fname,
+            n=len(self.expected))
+
+    def well_barcode(self, sequence, quality):
+        """Get the well barcode and sequence from a read."""
+        wbc = sequence[self.wbc_start:self.wbc_end]
+        seq = sequence[self.data_start:]
+        qual = quality[self.data_start:]
+        return wbc, seq, qual
+
+    def process(self, stream):
+        """Demultiplex the data read."""
+        rbuffer = []
+
+        # traverse the reads
+        for name, seq, qual in fq.fastq(stream):
+            # get the well barcode
+            wbc, seq, qual = self.well_barcode(seq, qual)
+
+            # add the well barcode to the readnames
+            name = fq.clean_readname(name)
+            name = fq.encode_in_readname(name, ["wbc={wbc}".format(wbc=wbc)])
+
+            # add data to the buffer
+            rbuffer.append((wbc, (name, seq, qual)))
+
+            if len(rbuffer) >= self.batchsize:
+                self.write_batch(rbuffer)
+                rbuffer.clear()
+
+    def write_batch(self, batch):
+        """Write a batch of reads."""
+        batch.sort(key=itemgetter(0))
+
+        # group items by well barcode
+        for wbc, group in groupby(batch, key=itemgetter(0)):
+            sample = self.unexpected
+            if wbc in self.expected.keys():
+                sample = self.expected[wbc]
+
+            fname = self.read_fname.format(wbc=wbc, **sample)
+            stream = open(fname, "at")
+
+            # write the reads in the group to the output file
+            for wbc, item in group:
+                stream.write(fq.format(**item))
+            stream.close()
+
+
 class PEDemultiplexer:
 
     def __init__(self):
         """Initialize a new demultiplexer."""
-        self.wbc_read = 2
+        self.wbc_read = 1
         self.wbc_start = 0
-        self.wbc_end = 12
+        self.wbc_end = 0
         self.data_start = 0
         self.batchsize = 1000000
 
