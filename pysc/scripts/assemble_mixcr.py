@@ -15,7 +15,8 @@ def assemble_mixcr(args):
             outstream = open(args.output, "wt")
 
     # process the reports
-    for pidx, path in enumerate(args.reports):
+    wrote_header = False
+    for path in args.reports:
 
         # check if the file is present
         if not os.path.exists(path):
@@ -27,10 +28,13 @@ def assemble_mixcr(args):
         table = Table(stream)
         data = [row for row in table]
         stream.close()
-
+        if not table.header:
+            sys.stderr.write("Error: file {0} was empty\n".format(path))
+            continue
         # just concatenate the files and skip all the processing steps
         if args.no_processing:
-            if pidx == 0:
+            if not wrote_header:
+                wrote_header = True
                 outstream.write("{0}\n".format("\t".join(table.header)))
             for row in data:
                 outstream.write("{0}\n".format("\t".join(row)))
@@ -59,7 +63,8 @@ def assemble_mixcr(args):
         total = sum(tpl[1] for tpl in types)
 
         # write the header for the first file
-        if pidx == 0:
+        if not wrote_header:
+            wrote_header = True
             fields = [
                 "file name",
                 "type",
