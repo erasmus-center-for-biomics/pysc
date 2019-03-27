@@ -27,17 +27,14 @@ class PEDemultiplexer:
 
     def option_report(self):
         return """PEDemultiplexer
-well-barcode-read: {wbc_read}
-well-barcode-start: {wbc_start}
-well-barcode-end: {wbc_end}
-data-start: {data_start}
-
-batchsize: {batchsize}
-
-output-read-a: {reada_fname}
-output-read-b: {readb_fname}
-
-expected {n} barcodes
+  well-barcode-read: {wbc_read}
+  well-barcode-start: {wbc_start}
+  well-barcode-end: {wbc_end}
+  data-start: {data_start}
+  batchsize: {batchsize}
+  output-read-a: {reada_fname}
+  output-read-b: {readb_fname}
+  expected {n} barcodes
         """.format(
             wbc_read=self.wbc_read,
             wbc_start=self.wbc_start,
