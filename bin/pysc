@@ -58,6 +58,24 @@ def main():
         help="The number of items in memory")
     sparser.set_defaults(func=scripts.demultiplex)
 
+    # assemble the MIXCR reports in a single file
+    sparser = subparsers.add_parser(
+        "assemble-mixcr",
+        help="Assemble mixcr reports in a single file")
+    sparser.add_argument(
+        "-r", "--reports", dest="reports",
+        type=str, nargs="+",
+        help="The MIXCR report")
+    sparser.add_argument(
+        "-o", "--output", dest="output",
+        type=str, default="stdout",
+        help="Annotated and assembled report")
+    sparser.add_argument(
+        "-n", "--no-processing", dest="no_processing",
+        type=bool, default=False,
+        help="Do not perform any processing on the reports.")
+    sparser.set_defaults(func=scripts.assemble_mixcr)
+
     # Parse the argument and call the scripts
     args = parser.parse_args()
     args.func(args)
