@@ -105,8 +105,22 @@ def main():
         type=float, default=0.0,
         help="""The minimum fraction per type of the
         maximum value of a clonotype""")
-
     sparser.set_defaults(func=scripts.filter_mixcr)
+
+    # Add single cell SAM tags to the expression datasets
+    sparser = subparsers.add_parser(
+        "add-sam-tags",
+        help="Add single cell SAM tags to the expression datasets")
+    sparser.add_argument(
+        "-i", "--input", dest="input",
+        type=str, default="stdout",
+        help="The input SAM file.")
+    sparser.add_argument(
+        "-w", "--well-list", dest="welllist",
+        type=str,
+        help="The well-list")
+    sparser.set_defaults(func=scripts.add_sam_tags)
+
 
     # Parse the argument and call the scripts
     args = parser.parse_args()

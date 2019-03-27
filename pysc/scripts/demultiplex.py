@@ -1,22 +1,7 @@
 import sys
 import gzip
+from pysc import read_well_list
 from pysc.demultiplex import SRDemultiplexer, PEDemultiplexer
-
-
-def read_well_list(stream):
-    """Read the well-list."""
-    retval = {}
-    for line in stream:
-        line = line.rstrip()
-        if line.startswith("Row"):
-            continue
-        tokens = line.split("\t")
-        wbc = tokens[5]
-        retval[wbc] = {
-            "row": tokens[0],
-            "column": tokens[1],
-            "sample": tokens[4].replace(" ", "_")}
-    return retval
 
 
 def demultiplex(args):
