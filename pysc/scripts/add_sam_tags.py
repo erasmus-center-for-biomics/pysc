@@ -29,7 +29,6 @@ def add_sam_tags(args):
     wells = read_well_list(stream)
     stream.close()
 
-
     # close the input files
     if instream is not sys.stdin:
         instream.close()
