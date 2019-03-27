@@ -15,7 +15,7 @@ def read_well_list(stream):
         retval[wbc] = {
             "row": tokens[0],
             "column": tokens[1],
-            "sample": tokens[4]}
+            "sample": tokens[4].replace(" ", "_")}
     return retval
 
 

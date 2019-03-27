@@ -26,7 +26,6 @@ def main():
         "-w", "--well-list", dest="welllist",
         type=str,
         help="The well-list")
-
     sparser.add_argument(
         "--output-read-1", dest="output_read_1",
         type=str, default="{sample}_{wbc}_{row}_{column}_R1.fastq",
