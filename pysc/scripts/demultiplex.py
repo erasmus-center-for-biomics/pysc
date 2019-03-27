@@ -53,12 +53,13 @@ def demultiplex(args):
         streama.close()
         streamb.close()
     else:
-        if args.read1.endswith(".gz"):
-            stream = gzip.open(args.read1, "rt")
-        else:
-            stream = open(args.read1, "rt")
         with open(args.welllist, "rt") as stream:
             wells = read_well_list(stream)
+
+        if args.read1.endswith(".gz"):
+            instream = gzip.open(args.read1, "rt")
+        else:
+            instream = open(args.read1, "rt")
 
         # run the single read demultiplexing
         demultiplexer = SRDemultiplexer()
@@ -71,4 +72,4 @@ def demultiplex(args):
 
         # demultiplex the data
         print(demultiplexer.option_report())
-        demultiplexer.process(stream)
+        demultiplexer.process(instream)

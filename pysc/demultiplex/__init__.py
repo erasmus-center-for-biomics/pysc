@@ -77,7 +77,7 @@ class SRDemultiplexer:
 
             # write the reads in the group to the output file
             for wbc, item in group:
-                stream.write(fq.format(**item))
+                stream.write(fq.format(*item))
             stream.close()
 
 
