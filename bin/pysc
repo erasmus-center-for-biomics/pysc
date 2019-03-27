@@ -76,6 +76,38 @@ def main():
         help="Do not perform any processing on the reports.")
     sparser.set_defaults(func=scripts.assemble_mixcr)
 
+    # filter the assembled MIXCR reports
+    sparser = subparsers.add_parser(
+        "filter-mixcr",
+        help="Assemble mixcr reports in a single file")
+    sparser.add_argument(
+        "-i", "--input", dest="input",
+        type=str, default="stdout",
+        help="The MIXCR report")
+    sparser.add_argument(
+        "-o", "--output", dest="output",
+        type=str, default="stdout",
+        help="The filtered report")
+    sparser.add_argument(
+        "--minimum-reads", dest="min_reads",
+        type=float, default=-1.0,
+        help="The minimum number of reads for a clonotype")
+    sparser.add_argument(
+        "--minimum-fraction-of-total", dest="min_total",
+        type=float, default=0.0,
+        help="The minimum fraction per type for a clonotype")
+    sparser.add_argument(
+        "--minimum-fraction-of-type", dest="min_type",
+        type=float, default=0.0,
+        help="The minimum fraction per type for a clonotype")
+    sparser.add_argument(
+        "--minimum-fraction-of-max", dest="min_max",
+        type=float, default=0.0,
+        help="""The minimum fraction per type of the
+        maximum value of a clonotype""")
+
+    sparser.set_defaults(func=scripts.filter_mixcr)
+
     # Parse the argument and call the scripts
     args = parser.parse_args()
     args.func(args)
