@@ -113,8 +113,12 @@ def main():
         help="Add single cell SAM tags to the expression datasets")
     sparser.add_argument(
         "-i", "--input", dest="input",
-        type=str, default="stdout",
+        type=str, default="stdin",
         help="The input SAM file.")
+    sparser.add_argument(
+        "-o", "--output", dest="output",
+        type=str, default="stdout",
+        help="The output SAM file.")
     sparser.add_argument(
         "-w", "--well-list", dest="welllist",
         type=str,
