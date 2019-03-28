@@ -130,7 +130,8 @@ def main():
     sparser.add_argument(
         "--umi-field", dest="umi_field",
         type=int, default=-1,
-        help="The column in the FastQ id with the unique molecular identifier (UMI)")
+        help="""The column in the FastQ id with the unique
+        molecular identifier (UMI)""")
     sparser.set_defaults(func=scripts.add_sam_tags)
 
     # Parse the argument and call the scripts
