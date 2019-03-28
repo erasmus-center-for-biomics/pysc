@@ -6,8 +6,8 @@ def main():
     """Run the tools in py-MeD-seq."""
     # Prepare the argument parser
     parser = argparse.ArgumentParser(
-        prog="pytcr",
-        description="""Python tools to process Takara ICELL8 TCR datasets.""")
+        prog="pysc",
+        description="""Python tools to process Takara ICELL8 datasets.""")
     subparsers = parser.add_subparsers(help="sub-command help")
 
     # analyse the sites found in the read
@@ -119,8 +119,15 @@ def main():
         "-w", "--well-list", dest="welllist",
         type=str,
         help="The well-list")
+    sparser.add_argument(
+        "--barcode-field", dest="barcode_field",
+        type=int, default=-1,
+        help="The column in the FastQ id with the well barcode")
+    sparser.add_argument(
+        "--umi-field", dest="umi_field",
+        type=int, default=-1,
+        help="The column in the FastQ id with the unique molecular identifier (UMI)")
     sparser.set_defaults(func=scripts.add_sam_tags)
-
 
     # Parse the argument and call the scripts
     args = parser.parse_args()
