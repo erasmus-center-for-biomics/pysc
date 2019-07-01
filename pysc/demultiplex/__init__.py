@@ -61,6 +61,9 @@ class SRDemultiplexer:
             if len(rbuffer) >= self.batchsize:
                 self.write_batch(rbuffer)
                 rbuffer.clear()
+        if rbuffer:
+            self.write_batch(rbuffer)
+            rbuffer.clear()
 
     def write_batch(self, batch):
         """Write a batch of reads."""
@@ -162,6 +165,10 @@ class PEDemultiplexer:
             if len(rbuffer) >= self.batchsize:
                 self.write_batch(rbuffer)
                 rbuffer.clear()
+        # process the last entries in the buffer
+        if rbuffer:
+            self.write_batch(rbuffer)
+            rbuffer.clear()
 
     def write_batch(self, batch):
         """Write a batch of reads."""
