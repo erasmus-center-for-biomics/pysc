@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/erasmus-center-for-biomics/pyaln",
     packages=setuptools.find_packages(),
     scripts=[
-        "bin/pytcr"
+        "bin/pysc"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
