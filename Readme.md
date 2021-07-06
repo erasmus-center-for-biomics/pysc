@@ -1,6 +1,8 @@
-# PyTCR
+# PySC
 
-## DescriptionA package to work with Takara ICELL8 TCR datasets.
+## Description
+
+A simple demultiplexing script for Takara ICELL8 TCR data.
 
 ## Installation instructions
 
